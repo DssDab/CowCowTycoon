@@ -79,6 +79,26 @@ crashlytics-build.properties
 # TestRunner generated files
 InitTestScene*.unity*
 
+############################
+# Secrets / credentials (IMPORTANT)
+############################
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+*.p12
+*.keystore
+*.jks
+*.mobileprovision
+
+**/Secrets/
+**/secret*/
+**/*apikey*
+**/*api_key*
+**/*service_key*
+**/*token*
+
 # Addressables default ignores, before user customizations
 /ServerData
 /[Aa]ssets/StreamingAssets/aa*
