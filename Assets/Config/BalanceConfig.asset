@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3e26d2624ac5854ea6bdd13a60718cb, type: 3}
+  m_Name: BalanceConfig
+  m_EditorClassIdentifier: 
+  maxDay: 7
+  initialFeedStock: 5
+  maxCowStock: 5
+  realAdgKg: 1
+  gameScale: 20
+  maxGainKg: 25
+  feedCurve: 0.8
+  stressScale: 100
+  stressMinFactor: 0.6
+  hungerStress: 5
+  baseStress: 1
+  indexScale: 0.2
+  muscleShare: 0.55
+  fatShare: 0.45
+  morningVolatility: 0.1
+  fallbackCowPrice: 2000
+  feedBundleSize: 5
+  weightClass:
+    denomLight: 310
+    denomMid: 320
+    denomHeavy: 330
+    denomMax: 350
+    minFactor: 0.7
+    maxFactor: 1.6
+  grade:
+    targetFatPct: 0.45
+    devA: 0.05
+    devB: 0.12
+    mulA: 1.2
+    mulB: 0.9
+    mulC: 0.7
