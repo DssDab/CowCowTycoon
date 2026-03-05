@@ -37,19 +37,7 @@ namespace Game.System
         private readonly IClock _time;
 
         public event Action<int> OnUpdatedPrice;
-        public bool IsAuctionWindowKst()
-        {
-            DateTimeOffset kst = _time.UtcNow.ToOffset(_kstOffset);
-
-            // 월 ~ 금
-            var dow = kst.DayOfWeek;
-            bool weekday = dow != DayOfWeek.Saturday && dow != DayOfWeek.Sunday;
-
-            TimeSpan time = kst.TimeOfDay;
-            bool isAution = time >= _auctionOpen && time <= _auctionClose;
-
-            return weekday && isAution;
-        }
+       
         public MarketSystem(IClock clock, BalanceConfig balance, NetworkConfig network)
         {
             _balance = balance;
@@ -110,8 +98,8 @@ namespace Game.System
             
             // 초기 가격 셋업은 여기서 완료로 간주(성공/실패 포함)
             _initDone = true;
+           
 
-            OnUpdatedPrice?.Invoke(_marketData.CowPrice);
             return ok;
         }
 
@@ -122,11 +110,12 @@ namespace Game.System
 
             int cur = _marketData.CowPrice;
             float vol = _balance != null ? _balance.morningVolatility : 0.1f;
-            int next = ApplyPercentBand(cur, vol);
+            int next = ApplyPercentBand (cur, vol);
 
             _marketData.CowPrice = next;
             _priceCache.cowPrice = next;
-            
+
+            PublishCurrentPrice();
         }
 
         private async Task<bool> TryFetchAndApplyAsync(CancellationToken ct)
@@ -143,6 +132,8 @@ namespace Game.System
                 _priceCache.fail = 0;
 
                 _priceCache.failReason = null;
+                UnityEngine.Debug.Log($"PRICE_FETCH_SUCCESS price={_marketData.CowPrice}, time{_priceCache.UTC}");
+                PublishCurrentPrice();
                 return true;
             }
             catch (OperationCanceledException)
@@ -165,7 +156,10 @@ namespace Game.System
             int price = _priceCache.cowPrice > 0 ? _priceCache.cowPrice : fallback;
             _marketData.CowPrice = price;
             _priceCache.cowPrice = price;
-            OnUpdatedPrice?.Invoke(price);
+
+            UnityEngine.Debug.LogWarning($"PRICE_INIT_FALLBACK price{_marketData.CowPrice} reason={_priceCache.failReason} utc={_priceCache.UTC}");
+            PublishCurrentPrice();
+
         }
         private void EnsureInitializedLocally()
         {
@@ -183,7 +177,13 @@ namespace Game.System
             int next = (int)(basePrice * (1f + delta));
             return Math.Max(1, next);
         }
+        public void PublishCurrentPrice()
+        {
+            if (_marketData.CowPrice <= 0)
+                ApplyFallbackInitialPrice();
 
+            OnUpdatedPrice?.Invoke(_marketData.CowPrice);
+        }
         public bool TryBuy(int money, int curCowCap, int maxCowCap, ItemType type, out int cost, out string failReason)
         {
 
@@ -318,9 +318,9 @@ namespace Game.System
 
 
             var gt = _balance != null ? _balance.grade : null;
-            float target = gt != null ? gt.targetFatPct : 0.45f;
-            float devA = gt != null ? gt.devA : 0.05f;
-            float devB = gt != null ? gt.devB : 0.12f;
+            float target = gt != null ? gt.targetFatPct : 0.4737f;
+            float devA = gt != null ? gt.devA : 0.01f;
+            float devB = gt != null ? gt.devB : 0.03f;
             float dev = Math.Abs(fatPct - target);
 
             char grade;
@@ -346,7 +346,19 @@ namespace Game.System
             return (finalPrice, grade);
 
        }
+        private bool IsAuctionWindowKst()
+        {
+            DateTimeOffset kst = _time.UtcNow.ToOffset(_kstOffset);
 
+            // 월 ~ 금
+            var dow = kst.DayOfWeek;
+            bool weekday = dow != DayOfWeek.Saturday && dow != DayOfWeek.Sunday;
+
+            TimeSpan time = kst.TimeOfDay;
+            bool isAution = time >= _auctionOpen && time <= _auctionClose;
+
+            return weekday && isAution;
+        }
         private bool CanBuy(int money, ItemType type)
         {
             int price = GetPrice(type);

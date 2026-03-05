@@ -22,7 +22,7 @@ public class CowData
         ID = id;
         Weight = UnityEngine.Random.Range(300f, 310.1f);
         Fat = UnityEngine.Random.Range(95f, 120.1f);
-        Muscle = UnityEngine.Random.Range(Fat * 1.10f, Fat * 1.31f);
+        Muscle = UnityEngine.Random.Range(Fat * 1.2f, Fat * 1.23f);
         Stress = 0f;
         m_period = 1;
     }
@@ -30,6 +30,27 @@ public class CowData
  
     public void Grow(BalanceConfig balance)
     {
+        float hungerStress = balance != null ? balance.hungerStress : 5f;
+        float baseStress = balance != null ? balance.baseStress : 1f;
+        // 굶었을 떄
+        if (EatCount == 0)
+        {
+            Stress += hungerStress;
+
+            float lossKg = balance != null ? balance.starveLossKg : 2f;
+            Weight = Math.Max(0, Weight - lossKg);
+
+            float starveScale = balance != null ? balance.starveScale : 1.5f;
+            float indexLoss = lossKg * starveScale;
+
+            float fatLossShare = balance != null ? balance.starveLossFatShare : 0.85f;
+            fatLossShare = Math.Clamp(fatLossShare, 0f, 1f);
+            float muscleLossShare = 1f - fatLossShare;
+
+            Muscle = Math.Max(0f, Muscle - indexLoss * muscleLossShare);
+            Fat = Math.Max(0f, Fat - indexLoss * fatLossShare);
+            return;
+        }
 
         float realAdgKg = balance != null ? balance.realAdgKg : 1f;
         float gameScale = balance != null ? balance.gameScale : 20f;
@@ -58,19 +79,13 @@ public class CowData
         float totalIndexGain = gain * indexScale;
 
         float muscleShare = balance != null ? balance.muscleShare : 0.55f;
-        float fatShare = balance != null ? balance.fatShare : 0.45f;
+        float fatShare = balance != null ? balance.fatShare : 0.6f;
         Muscle += totalIndexGain * muscleShare;
         Fat += totalIndexGain * fatShare;
 
 
-        float hungerStress = balance != null ? balance.hungerStress : 5f;
-        float baseStress = balance != null ? balance.baseStress : 1f;
-        // 굶었을 떄
-        if(EatCount == 0)
-            Stress += hungerStress;
-         // 사료를 먹더라도 기본 스트레스 증가 (사육 환경 부담)
-        else
-            Stress += baseStress;
+     
+       
 
     }
 
