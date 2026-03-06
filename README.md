@@ -86,7 +86,7 @@ public ActionResult ExecuteAction(PlayerAction action)
 
     AdvancePhase();
 }
-
+```
 플레이어의 행동을 처리하고 게임 상태를 갱신하는 핵심 루프입니다.
 
 GameManager
@@ -106,18 +106,18 @@ Save / Load 처리
 GameManager는 게임 로직을 직접 처리하지 않고
 각 시스템을 연결하는 역할에 집중하도록 설계했습니다.
 
-MarketSystem
+## MarketSystem
 
 MarketSystem은 소의 시장 가격을 관리하는 시스템입니다.
 
-주요 기능
+### 주요 기능
 
 게임 시작 시 외부 API를 통해 시세 조회
 
 조회 실패 시 fallback 가격 적용
 
 Morning Phase마다 가격 변동 시뮬레이션
-
+``` csharp
 핵심 코드
 public async Task InitPriceAsync()
 {
@@ -128,7 +128,7 @@ public async Task InitPriceAsync()
         ApplyFallbackInitialPrice();
     }
 }
-
+```
 외부 API 요청 실패 시 잘못된 가격이 적용되는 것을 방지하기 위해
 응답 값 검증 로직을 추가했습니다.
 
@@ -136,7 +136,7 @@ if (amt <= 0)
 {
     return false;
 }
-외부 시세 시스템
+## 외부 시세 시스템
 
 게임 시작 시 외부 API를 통해 소 경락 시세를 조회합니다.
 
@@ -160,7 +160,7 @@ fallback 가격을 적용하도록 설계했습니다.
 또한 가격 조회 성공 여부는 플레이어 UI에 표시하지 않고
 개발 검증을 위한 로그로만 기록하도록 구성했습니다.
 
-Save / Load 시스템
+## Save / Load 시스템
 
 게임 상태는 JSON 형태로 저장됩니다.
 
@@ -173,13 +173,14 @@ Farm 상태
 Cow 목록
 
 Day / Phase
-
+``` csharp
 핵심 코드
 public void Save(SaveData data)
 {
     string json = JsonUtility.ToJson(data);
     File.WriteAllText(savePath, json);
 }
+```
 저장 시점
 NextDay 발생 시 자동 저장
 
