@@ -25,11 +25,10 @@ MonoBehaviour:
   baseStress: 1
   starveScale: 1.5
   starveLossKg: 2
-  starveLossMuscleShare: 0.9
   starveLossFatShare: 0.85
   indexScale: 0.2
-  muscleShare: 0.55
-  fatShare: 0.6
+  muscleShare: 0.32
+  fatShare: 0.68
   morningVolatility: 0.1
   fallbackCowPrice: 2000
   feedBundleSize: 5
@@ -42,8 +41,8 @@ MonoBehaviour:
     maxFactor: 1.6
   grade:
     targetFatPct: 0.4737
-    devA: 0.01
+    devA: 0.012
     devB: 0.03
-    mulA: 1.2
-    mulB: 0.9
-    mulC: 0.7
+    mulA: 1.5
+    mulB: 1.15
+    mulC: 0.75

@@ -30,8 +30,8 @@ public class BalanceConfig : ScriptableObject
     // 근육/지방 지표 성장 : 체중 증가량에 비례, 비육전기에서 근육+지방이 같이 붙음.
     // (지표 스케일은 게임 밸런스용) - ratio가 1.2 근처로 유지되기 쉬운 분배
     public float indexScale = 0.2f;                 // 체중 1kg 증가에 대해 지표 총합이 2 정도 증가
-    [Range(0f, 1f)] public float muscleShare = 0.55f;
-    [Range(0f, 1f)] public float fatShare = 0.6f;
+    [Range(0f, 1f)] public float muscleShare = 0.38f;
+    [Range(0f, 1f)] public float fatShare = 0.62f;
 
     [Header("Market Tuning")]
     [Range(0f, 1f)] public float morningVolatility = 0.10f;
@@ -62,11 +62,11 @@ public class BalanceConfig : ScriptableObject
         // 비육전기에서 근육/지방이 고르게 붙게 한다.
 
         [Range(0f, 1f)] public float targetFatPct = 0.4737f;
-        public float devA = 0.03f;
-        public float devB = 0.08f;
+        public float devA = 0.012f;
+        public float devB = 0.03f;
 
-        public float mulA = 1.2f;
-        public float mulB = 0.9f;
-        public float mulC = 0.7f;
+        public float mulA = 1.5f;
+        public float mulB = 1.15f;
+        public float mulC = 0.75f;
     }
 }

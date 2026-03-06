@@ -37,7 +37,12 @@ namespace Game.System
         private readonly IClock _time;
 
         public event Action<int> OnUpdatedPrice;
-       
+
+        // 남아있는 소 중에 가장 비싼 소
+        private int _topId = -1;
+        private char _topGrade = 'F';
+        private int _topPrice = 0;
+
         public MarketSystem(IClock clock, BalanceConfig balance, NetworkConfig network)
         {
             _balance = balance;
@@ -128,9 +133,8 @@ namespace Game.System
 
                 _marketData.CowPrice = price;
                 _priceCache.cowPrice = price;
-                _priceCache.UTC = _time.UtcNow.UtcDateTime;
                 _priceCache.fail = 0;
-
+                _priceCache.UTC = DateTime.UtcNow.ToLocalTime();
                 _priceCache.failReason = null;
                 UnityEngine.Debug.Log($"PRICE_FETCH_SUCCESS price={_marketData.CowPrice}, time{_priceCache.UTC}");
                 PublishCurrentPrice();
@@ -225,8 +229,15 @@ namespace Game.System
                 return false;
             }
           
-            int price = EvaluateSellPrice(cowData).price;
-            money = price;
+            (int price, char grade) result = EvaluateSellPrice(cowData);
+            
+            if(result.price > _topPrice)
+            {
+                _topId = cowData.ID;
+                _topPrice = result.price;
+                _topGrade =  result.grade;
+            }
+            money = result.price;
             return true;
         }
 
@@ -241,10 +252,7 @@ namespace Game.System
 
             int a = 0, b = 0, c = 0;
 
-            // 남아있는 소 중에 가장 비싼 소
-            int topId = -1;
-            char topGrade = 'F';
-            int topPrice = 0;
+           
 
             foreach(var kv in cows)
             {
@@ -259,12 +267,11 @@ namespace Game.System
                     b++;
                 else
                     c++;
-
-                if(v.price > topPrice)
+                if (v.price > _topPrice)
                 {
-                    topId = cow.ID;
-                    topGrade = v.grade;
-                    topPrice = v.price;
+                    _topId = cow.ID;
+                    _topPrice = v.price;
+                    _topGrade = v.grade;
                 }
             }
             int premium = liquidatationSum - baseLiquidatation;
@@ -278,8 +285,8 @@ namespace Game.System
             sb.AppendLine($"등급 프리미엄 : {(premium >= 0 ? "+" : "")}{premium} (기준 :{baseLiquidatation})");
             sb.AppendLine($"등급 분포 : A : {a} / B : {b} / C : {c}");
             sb.AppendLine($"남은 소 : {cowCount}");
-            if (topId != -1)
-                sb.AppendLine($"최고 가치 소 : ID{topId} / {topGrade} / {topPrice}");
+            if (_topId != -1)
+                sb.AppendLine($"최고 가치 소 : ID{_topId} / {_topGrade} / {_topPrice}");
             sb.AppendLine($"마지막 소 시세 : {cowPrice}");
 
             return (sb.ToString());
@@ -319,7 +326,7 @@ namespace Game.System
 
             var gt = _balance != null ? _balance.grade : null;
             float target = gt != null ? gt.targetFatPct : 0.4737f;
-            float devA = gt != null ? gt.devA : 0.01f;
+            float devA = gt != null ? gt.devA : 0.012f;
             float devB = gt != null ? gt.devB : 0.03f;
             float dev = Math.Abs(fatPct - target);
 
@@ -328,17 +335,17 @@ namespace Game.System
             if(dev <= devA)
             {
                 grade = 'A';
-                gradeMul = gt != null ? gt.mulA : 1.2f;
+                gradeMul = gt != null ? gt.mulA : 1.5f;
             }
             else if(dev <= devB)
             {
                 grade = 'B';
-                gradeMul = gt != null ? gt.mulB : 0.9f;
+                gradeMul = gt != null ? gt.mulB : 1.15f;
             }
             else
             {
                 grade = 'C';
-                gradeMul = gt != null ? gt.mulC : 0.7f;
+                gradeMul = gt != null ? gt.mulC : 0.75f;
             }
             int basePrice = GetPrice(ItemType.Cow);
             int finalPrice = (int)(basePrice * weightFactor * gradeMul);
@@ -349,7 +356,7 @@ namespace Game.System
         private bool IsAuctionWindowKst()
         {
             DateTimeOffset kst = _time.UtcNow.ToOffset(_kstOffset);
-
+            _priceCache.UTC = kst.LocalDateTime;
             // 월 ~ 금
             var dow = kst.DayOfWeek;
             bool weekday = dow != DayOfWeek.Saturday && dow != DayOfWeek.Sunday;

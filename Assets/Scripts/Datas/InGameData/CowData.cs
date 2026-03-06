@@ -78,15 +78,12 @@ public class CowData
         float indexScale = balance != null ? balance.indexScale : 0.2f;  
         float totalIndexGain = gain * indexScale;
 
-        float muscleShare = balance != null ? balance.muscleShare : 0.55f;
-        float fatShare = balance != null ? balance.fatShare : 0.6f;
+        float muscleShare = balance != null ? balance.muscleShare : 0.38f;
+        float fatShare = balance != null ? balance.fatShare : 0.62f;
         Muscle += totalIndexGain * muscleShare;
         Fat += totalIndexGain * fatShare;
 
-
-     
-       
-
+        Stress += baseStress; 
     }
 
     

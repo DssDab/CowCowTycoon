@@ -75,14 +75,7 @@ public class GameManager : MonoBehaviour
         if(m_saveSystem.TryLoad(m_trainingSession, m_playerData, m_farmData, m_marketSystem._marketData) == true)
         {
             m_spawner.Initialize(m_CowPrefab, m_farmData.MaxCowStock);
-            try
-            {
-               await m_trainingSession.SessionLoad();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning(ex.Message);
-            }
+            m_trainingSession.SessionLoad();
         }
         else
         {

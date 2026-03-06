@@ -31,8 +31,8 @@ public class Spawner : MonoBehaviour
         {
             // 스폰 위치 지정
             Vector3 randomViewportPos = new Vector3(
-            UnityEngine.Random.Range(0.3f, 0.7f), // X: 10%~90%
-            UnityEngine.Random.Range(0.3f, 0.7f), // Y: 10%~90%
+            UnityEngine.Random.Range(0.3f, 0.7f), // X: 30%~70%
+            UnityEngine.Random.Range(0.3f, 0.7f), // Y: 30%~70%
             0f);
 
             if (Camera.main == null)
@@ -51,7 +51,7 @@ public class Spawner : MonoBehaviour
 
             _cows.Add(cowController.Data.ID, cow);
             OnSpawned?.Invoke(cowController);
-            return "Success";
+            return "";
             
         }
         return "Fail : ";

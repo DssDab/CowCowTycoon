@@ -32,7 +32,6 @@ namespace Game.System
 
         private CancellationTokenSource _cts;
 
-        private readonly BalanceConfig _balance;
         private readonly NetworkConfig _network;
      
         public bool isFinished { get; private set; }
@@ -44,7 +43,6 @@ namespace Game.System
             this.marketSystem = marketSystem;
             this.player = player;
 
-            _balance = balance;
             _network = network;
             _maxDay = balance != null ? balance.maxDay : 7;
         }
@@ -133,8 +131,7 @@ namespace Game.System
                     hp = -1;
                     int id = farm.AddCow();
                     feedback = OnCowSpawned?.Invoke(farm.Cows[id]);
-                    OnActionFeedback?.Invoke(feedback);
-                        player.ChangeMoney(cost);
+                    player.ChangeMoney(cost);
                     break;
                 }
                 case TrainingAction.BuyFeed:
@@ -172,8 +169,14 @@ namespace Game.System
                     // 판매 성공
                     hp = -1;
                     OnSold?.Invoke(farm.SelectedID);
-                    player.ChangeMoney(price);
-                    break;
+                        player.ChangeHp(hp);
+                        player.ChangeMoney(price);
+                        OnSessionUpdated?.Invoke(_currentPhase,
+                                      _curDay,
+                                      player.PlayerHp,
+                                      player.PlayerMoney,
+                                      farm.FeedStock);
+                        return;
                 }
             }
            
@@ -243,21 +246,16 @@ namespace Game.System
             _currentPhase = sd.dayPhase;
             this.isFinished = sd.isFinished;
         }
-        public async Task SessionLoad()
+        public void SessionLoad()
         {
-            _cts?.Cancel();
-            _cts?.Dispose();
-            _cts = new CancellationTokenSource();
-
             OnSessionUpdated?.Invoke(_currentPhase, _curDay, player.PlayerHp, player.PlayerMoney, farm.FeedStock);
+            marketSystem.PublishCurrentPrice();
+
             foreach (var id in farm.Cows)
             {
                 OnCowSpawned?.Invoke(id.Value);
             }
-            if (_network != null && string.IsNullOrEmpty(_network.serverUrl) == false)
-            {
-                await marketSystem.InitPriceAsync(_cts.Token);
-            }
+          
         }
         private void EndSession()
         {

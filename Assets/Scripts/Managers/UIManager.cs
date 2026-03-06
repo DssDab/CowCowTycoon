@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public struct StatePopup
@@ -54,6 +53,7 @@ public class UIManager : MonoBehaviour
     public void OnGameOverPanel(string message)
     {
         GameoverPanel.SetActive(true);
+        StatePopup.CowStatPopup.SetActive(false);
         GameoverText.text = message;
     }
     public void OnCowStatePopup(CowData cowData, Vector3 pos)
