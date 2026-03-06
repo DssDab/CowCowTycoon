@@ -129,6 +129,8 @@ namespace Game.System
             {
                 int timeoutSec = _network != null ? _network.timeoutSeconds : 5;
                 int auctAmt = await _networkUtility.GetTodayAuctAmtAsync(ct, timeoutSec);
+                if (auctAmt <= 0)
+                    return false;
                 int price = auctAmt / 10;
 
                 _marketData.CowPrice = price;
