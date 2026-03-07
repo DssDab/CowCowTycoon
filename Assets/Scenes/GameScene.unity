@@ -516,7 +516,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC7AC\uC0B0\n0"
+  m_text: "\uC7AC\uC0B0 \n0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 668fae1aba6695344a3a22575db1f890, type: 2}
   m_sharedMaterial: {fileID: -7267443864526112856, guid: 668fae1aba6695344a3a22575db1f890, type: 2}
@@ -2890,7 +2890,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 2
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 200}
+  m_CellSize: {x: 180, y: 200}
   m_Spacing: {x: 120, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
