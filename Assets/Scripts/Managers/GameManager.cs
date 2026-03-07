@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 using Game.System;
 using Assets.Scripts.Systems;
-using System;
 using Assets.Scripts.Utility;
+using System.Collections.Generic;
 
 
 public class GameManager : MonoBehaviour
@@ -21,10 +22,11 @@ public class GameManager : MonoBehaviour
     // 리소스, 컴포넌트
     [SerializeField] private BalanceConfig m_balance;
     [SerializeField] private NetworkConfig m_network;
-    [SerializeField] private GameObject m_CowPrefab;
     [SerializeField] private InputManager m_Input;
     [SerializeField] private UIManager m_UiManager;
     [SerializeField] private Spawner m_spawner;
+    [SerializeField] private GameObject m_CowPrefab;
+    [SerializeField] List<Transform> m_spawnPos;
 
 
 
@@ -74,14 +76,14 @@ public class GameManager : MonoBehaviour
     {
         if(m_saveSystem.TryLoad(m_trainingSession, m_playerData, m_farmData, m_marketSystem._marketData) == true)
         {
-            m_spawner.Initialize(m_CowPrefab, m_farmData.MaxCowStock);
+            m_spawner.Initialize(m_CowPrefab, m_spawnPos, m_farmData.MaxCowStock);
             m_trainingSession.SessionLoad();
         }
         else
         {
             try
             {
-                m_spawner.Initialize(m_CowPrefab, m_farmData.MaxCowStock);
+                m_spawner.Initialize(m_CowPrefab, m_spawnPos, m_farmData.MaxCowStock);
                 await m_trainingSession.StartSessionAsync();
             }
             catch(Exception ex)
