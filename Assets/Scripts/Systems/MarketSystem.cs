@@ -131,6 +131,7 @@ namespace Game.System
                 int auctAmt = await _networkUtility.GetTodayAuctAmtAsync(ct, timeoutSec);
                 if (auctAmt <= 0)
                     return false;
+
                 int price = auctAmt / 10;
 
                 _marketData.CowPrice = price;
@@ -377,7 +378,7 @@ namespace Game.System
         {
             return type == ItemType.Cow ?
                 _marketData.CowPrice :
-                _marketData.FeedPrice;
+                _marketData.FeedPrice * _marketData.FEED_BUNDLE;
         }
     
     }

@@ -142,10 +142,9 @@ namespace Game.System
                         OnActionFeedback?.Invoke(feedback);
                         return;
                     }
-                    // 구매 성공!!
-                    int feedBundle = MarketData.FEED_BUNDLE;
-                    farm.AddFeed(feedBundle);
-                    cost *= feedBundle;
+                        // 구매 성공!!
+                    int feed = marketSystem._marketData.FEED_BUNDLE;
+                    farm.AddFeed(feed);
                     player.ChangeMoney(cost);
                     hp = -1;
                     break;
@@ -217,7 +216,6 @@ namespace Game.System
           
             if (_curDay >= _maxDay)
             {
-                // 우선 임시로 게임종료 패널 보여주고 마무리
                 EndSession();
                 return;
             }
@@ -232,8 +230,6 @@ namespace Game.System
           
             marketSystem.ApplyMorningSimulatedPrice();
             OnSaved?.Invoke(this, player, farm, marketSystem._marketData);
-            // 이벤트 발생 여부 체크 (랜덤 이벤트)
-            //CheckRandomEvent();
 
         }
         public SessionSaveData Export()
