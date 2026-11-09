@@ -71,12 +71,12 @@ Unity 6.1 / C#로 제작한 **소 사육과 거래 중심의 점수형 턴제 �
 
 ### 테스트 및 검증
 - Unity Test Framework의 EditMode 테스트를 활용해 주요 게임 로직을 검증했습니다.
-- **FarmDataTests : 목장 데이터 관련 로직 6개 통과
-- **MarketSystemTests : 구매/판매 조건, 등급별 판매가, 종료 정산 7개 통과
-- **SaveMapperTests : 저장 데이터 변환 로직 2개 통과
+- **FarmDataTests : 목장 데이터 관련 로직 6개 통과**
+- **MarketSystemTests : 구매/판매 조건, 등급별 판매가, 종료 정산 7개 통과**
+- **SaveMapperTests : 저장 데이터 변환 로직 2개 통과**
 
-- **검증 결과 : 게임 로직 테스트 15개 통과 / 실패 0개
-- **※ Test Runner에 표시되는 SmokeTests 1개는 테스트 환경 확인용으로, 게임 로직 검증 항목에서 제외했습니다.
+- **검증 결과 : 게임 로직 테스트 15개 통과 / 실패 0개**
+- **※ Test Runner에 표시되는 SmokeTests 1개는 테스트 환경 확인용으로, 게임 로직 검증 항목에서 제외했습니다.**
 
 * * *
 
