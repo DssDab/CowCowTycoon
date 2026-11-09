@@ -82,7 +82,7 @@ Unity 6.1 / C#로 제작한 **소 사육과 거래 중심의 점수형 턴제 �
 
 ### 실행 방법 (Unity Editor)
 1. Unity Hub에서 프로젝트를 열고 **Unity 6.1**로 실행합니다.
-2. <CodeBlock language="markdown" editable>Title씬을 엽니다.</CodeBlock>
+2. `Title`씬을 엽니다.
 3. Hierarchy에서 `GameManager`가 존재하는지 확인합니다.
 4. 상단 **Play** 버튼을 눌러 실행합니다.
 5. 인게임 UI에서 `Feed/Rest/Buy/Sell`을 선택하며 턴을 진행합니다.
