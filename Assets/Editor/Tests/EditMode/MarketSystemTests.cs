@@ -113,11 +113,11 @@ public class MarketSystemTests
 
         var ms = new MarketSystem(new FakeClock(), balance, network);
 
-        // A : score = (muscle / fat) == 0.8 => 1.2배
-        var cowA = MakeCow(id: 1, weight: 200, muscle: 80, fat: 100, period: 2);
+        // A등급 : 지방 비율 47.37%, 목표 비율(47.37%)과의 편차 1.2%p 이내
+        var cowA = MakeCow(id: 1, weight: 200, muscle: 80, fat: 72, period: 2);
 
-        // C : (score >= 1.5) => 0.7배
-        var cowC = MakeCow(id: 1, weight: 250, muscle: 150, fat: 100, period: 2);
+        // C등급 : 지방 비율 51.52%, 목표 비율(47.37%)과의 편차 3.0%p 초과
+        var cowC = MakeCow(id: 1, weight: 200, muscle: 80, fat: 85, period: 2);
 
         bool isA = ms.TrySell(type: ItemType.Cow, cowA, period: cowA.GetPeriod(), phase: DayPhase.Morning, out int moneyA, out string reasonA);
         bool isC = ms.TrySell(type: ItemType.Cow, cowC, period: cowC.GetPeriod(), phase: DayPhase.Morning, out int moneyC, out string reasonC);
